@@ -1,5 +1,5 @@
 const initialState = {
-    timer : 60
+    timer : 120
 }
 
 const storeReducer = (state = initialState ,action) =>{
@@ -9,6 +9,8 @@ const storeReducer = (state = initialState ,action) =>{
         timer : action.payload
 
     }
+    case 'resetTime': return initialState
+    
     default: return state
   }
 }

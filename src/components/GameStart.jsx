@@ -10,6 +10,7 @@ import sound from '../sounds/angry_birds.mp3'
 import gameOver from '../sounds/candy_crush_nivel_no_completado.mp3'
 import matched from '../sounds/candy_crush_bomba_de_color_creada.mp3'
 import winner from '../sounds/mario_kart_wii_fanfare.mp3'
+
 function GameStart() {
     let audioGame = new Audio(matched)
     audioGame.volume = 0.05
@@ -30,7 +31,7 @@ function GameStart() {
         loop: false,
         volume: 0.05,
       }),[]);
-
+      
     const [searchParams] = useSearchParams();
     const files = searchParams.get('files')
     const rows= searchParams.get('rows')
@@ -60,7 +61,7 @@ function GameStart() {
         return clonedArray
     }
   
-  
+   
    
    let figureRandom =  useMemo(()=> shuffle([...figure,...figure]) ,[])
    const [store , dispatch] = useContext(StoreContext)
@@ -71,16 +72,48 @@ function GameStart() {
       remainingPairs: figure.length
     })
    
-
+   
      useEffect(() => {
         soundGame.play()
         
-        return () =>{ soundGame.stop()}
+        return () =>{
+            dispatch({type:'resetTime'})
+            soundGame.stop()}
       },
       [soundGame]
     ); 
+    
+   let startFlipCard = document.querySelectorAll('.card')
+   const seconds = Math.floor(timer / 1000) % 60;
+   const minutes = Math.floor(timer / 60000) % 60;
+    useEffect(() => {
+        if(seconds > 53 && minutes > 0){ 
+        
+            startFlipCard.forEach(card => { 
+           
+              card.classList.add('flipped')           
+          })
+        }
+        
+         },
+      [ startFlipCard ,seconds , minutes]
+    ); 
    
-    if(timer === 0 || game.remainingPairs === 0){
+    if(seconds === 53 && minutes > 0){
+        setTimeout(()=>{
+            startFlipCard.forEach(card => { 
+           
+                card.classList.remove('flipped')           
+            })
+
+        },1000)
+    }
+    
+  
+  console.log(seconds)
+   
+
+    if(timer === 0 || game.remainingPairs === 0 ){
          soundGame.stop()
         if(game.remainingPairs !== 0) play()
         else{
@@ -104,7 +137,7 @@ function GameStart() {
         
        const flipBackCards = () => {                                      //flip back cards    //flipBackCards es llamada en la linea 101, y comprueba si las tarjetas coinciden
             document.querySelectorAll('.card:not(.matched)').forEach(card => { 
-                console.log(card)                               //selecciona todas las tarjetas que no estén marcadas como matched
+                                               //selecciona todas las tarjetas que no estén marcadas como matched
                 card.classList.remove('flipped')               //remueve la clase flipped que las asigna la linea 84, si es que no tiene la clase matched
             })
            flip = 0                              //reinicia el contador de tarjetas volteadas

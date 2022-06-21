@@ -137,6 +137,7 @@ body{
 
 .winText{
   user-select: none;
+  color:var(--colorMain)
 }
 
 .stats{
@@ -298,6 +299,7 @@ body{
 
   .winText{
       font-size: 1.2rem;
+      color:var(--colorMain)
   }
 
 
